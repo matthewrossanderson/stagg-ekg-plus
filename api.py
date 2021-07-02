@@ -2,9 +2,11 @@ import http.server
 from io import BytesIO
 import socketserver
 from stagg_ekg_plus import StaggEKG
+from dotenv import dotenv_values
 
-PORT = 8000
-MAC = "00:1C:97:18:7B:04"
+config = dotenv_values(".env")
+MAC = config["MAC"]
+PORT = int(config["PORT"])
 
 class web_server(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -58,7 +60,6 @@ def convert_c_to_f(temp):
     return conversion
 
 with socketserver.TCPServer(("localhost", PORT), web_server) as httpd:
-    # httpd.serve_forever()
     print("STARTED")
     try:
         httpd.serve_forever()
